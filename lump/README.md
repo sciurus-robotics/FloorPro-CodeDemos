@@ -1,4 +1,4 @@
-# LP FloorPro on LEGO hubs (Pybricks, LUMP)
+# FloorPro on LEGO hubs (Pybricks, LUMP)
 
 Driver and demos for the FloorPro connected to a LEGO Prime / Inventor hub running
 [Pybricks](https://pybricks.com). The sensor speaks LEGO's UART sensor protocol

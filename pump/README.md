@@ -1,4 +1,4 @@
-# LP FloorPro on the PeakHub (PUMP)
+# FloorPro on the PeakHub (PUMP)
 
 Demos for the FloorPro connected to a PeakHub. The sensor speaks PUMP there and
 is accessed through the `sciro.pump.FloorPro` class that is built into the
