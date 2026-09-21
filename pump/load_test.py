@@ -1,7 +1,7 @@
 """Link load test: every FloorPro stream at its full rate, and how each one derates.
 
 Run: scirodev run ble load_test.py   (sensor on Port.A; colour sensor on EXT1 and
-IMU on EXT2 are included when present, with a warning when they are not)
+gyro on EXT2 are included when present, with a warning when they are not)
 
 Phase 1 measures each stream alone at PERIODIC / every sample (its solo rate).
 Phase 2 switches all streams on at once (more than the 500 kbaud link can carry
@@ -27,7 +27,7 @@ streams = floor_pro.streams()
 print("Device:", floor_pro.serial)
 for sid, url, ext_port, n in streams:
     print("  stream", sid, url, "ext", ext_port, "state", dev.state(sid))
-for name, get in (("colour sensor on EXT1", lambda: floor_pro.color_sensor(1)), ("IMU on EXT2", lambda: floor_pro.imu(2))):
+for name, get in (("colour sensor on EXT1", lambda: floor_pro.color_sensor(1)), ("gyro on EXT2", lambda: floor_pro.gyro(2))):
     try:
         get()
     except OSError:
@@ -116,7 +116,7 @@ for sid, url, ext_port, n in streams:
     print("%-12s %10.1f %10.1f %7.1f%% %6d" % (names[sid], solo[sid], loaded, kept, g1[sid] - g0[sid]))
 print("%-12s %10s %10.1f" % ("total", "", total))
 
-# Back to the defaults: line every sample, colour sensor on change, IMU 100 Hz,
+# Back to the defaults: line every sample, colour sensor on change, gyro 100 Hz,
 # raw / calibration / display off.
 for sid, url, ext_port, n in streams:
     if "/line/" in url:

@@ -3,7 +3,7 @@
 Driver code and demo programs for the **FloorPro** line sensor by Sciurus
 Robotics: 15 IR reflectance elements reporting the centre of gravity of dark and
 bright regions, overall brightness, per-sensor readings, plus two extension ports
-for a colour sensor or an IMU.
+for a colour sensor or the gyro.
 
 Product information, documentation and firmware downloads: **https://sciro.ch**
 
@@ -18,6 +18,11 @@ The same sensor firmware serves both: it speaks LUMP to a LEGO hub and switches
 to PUMP when a PeakHub is on the other end. The demos in both folders cover the
 same ground (centroids, brightness, the 15 sensors on the 5x5 display, calibration,
 quality check, colour sensor), so you can compare the two APIs side by side.
+
+## Related
+
+The gyro that plugs into one of the extension ports has its own demos, for both
+hubs: [sciurus-robotics/Gyro-CodeDemos](https://github.com/sciurus-robotics/Gyro-CodeDemos).
 
 ## Requirements
 
