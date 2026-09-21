@@ -14,7 +14,6 @@ Driver and demos for the FloorPro connected to a LEGO Prime / Inventor hub runni
   values. This can be used to validate operation of the current setup, in
   particular with respect to mounting distance and surface properties. It can also
   be used for quality control with a standardized setup.
-- `cs_demo.py` — BETA: colour sensor on an extension port (raw RGBC over LUMP mode 0)
 
 Run with [`pybricksdev`](https://github.com/pybricks/pybricksdev), e.g.
 `pybricksdev run ble demo.py` from this folder (the driver module must sit next to

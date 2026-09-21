@@ -21,8 +21,10 @@ quality check, colour sensor), so you can compare the two APIs side by side.
 
 ## Related
 
-The gyro that plugs into one of the extension ports has its own demos, for both
-hubs: [sciurus-robotics/Gyro-CodeDemos](https://github.com/sciurus-robotics/Gyro-CodeDemos).
+The sensors that plug into the extension ports have their own demo repositories,
+each for both hubs:
+[ColorSensor-CodeDemos](https://github.com/sciurus-robotics/ColorSensor-CodeDemos) and
+[Gyro-CodeDemos](https://github.com/sciurus-robotics/Gyro-CodeDemos).
 
 ## Requirements
 

@@ -24,7 +24,6 @@ understand `sciro.pump`, `sciro.hubs.PeakHub` and `Port.G`/`Port.H`.
   sensor's own button works too)
 - `qc.py` — Print the calibrated range of every sensor, to validate mounting
   distance and surface, or for quality control with a standardized setup
-- `cs_demo.py` — Colour sensor on extension port 1: raw RGBC, HSV, LED control
 - `display_demo.py` — Just the display mirror, as a minimal program
 - `load_test.py` — Subscribe every stream at full rate and measure how the link
   derates; results in [LOAD-TEST.md](LOAD-TEST.md)
@@ -45,7 +44,8 @@ mins, maxs, _, _ = fp.ir_calib.oneshot()  # the stored calibration table
 r, g, b, c, status = fp.color_sensor(1).read()
 roll, pitch, yaw, status = fp.gyro(2).read()
 
-# Extension-port sensors can also be opened directly, by hub port + extension port:
+# Extension-port sensors can also be opened directly, by hub port + extension port
+# (demos: ColorSensor-CodeDemos and Gyro-CodeDemos):
 from sciro.parameters import ExtPort
 from sciro.pump import ColorSensor, Gyro
 color = ColorSensor(Port.A, ExtPort.EXT1)
