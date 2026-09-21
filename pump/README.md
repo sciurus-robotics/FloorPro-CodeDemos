@@ -44,6 +44,13 @@ raw = fp.ir_raw.oneshot()                 # 15 x 12-bit ADC counts
 mins, maxs, _, _ = fp.ir_calib.oneshot()  # the stored calibration table
 r, g, b, c, status = fp.color_sensor(1).read()
 roll, pitch, yaw, status = fp.imu(2).read()
+
+# Extension-port sensors can also be opened directly, by hub port + extension port:
+from sciro.parameters import ExtPort
+from sciro.pump import ColorSensor, IMU
+color = ColorSensor(Port.A, ExtPort.EXT1)
+print(color.hsv().h, color.color())      # hue 0..359 / nearest detectable colour
+imu = IMU(Port.A, ExtPort.EXT2)
 hub.display.device(fp, brightness=300)    # mirror the sensor's LED strip
 ```
 

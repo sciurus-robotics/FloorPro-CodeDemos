@@ -1,53 +1,30 @@
-"""Colour sensor (TCS3400) on the FloorPro's extension port EXT1.
+"""Colour sensor (TCS3400) on extension port EXT1 of the FloorPro.
 
-Run: scirodev run ble cs_demo.py   (sensor on Port.A, colour sensor on EXT1)
+Run: scirodev run ble cs_demo.py   (FloorPro on Port.A, colour sensor on EXT1)
 
-Prints the raw red / green / blue / clear readings at the sensor's resolution
-and the colour as hue / saturation / value. RIGHT button cycles the
-illumination LED through 0 / 25 / 100 %.
+Prints the raw red / green / blue / clear readings, the colour as hue /
+saturation / value, and the nearest detectable colour. RIGHT button cycles the
+illumination LED through 25 / 100 / 0 %.
 """
 
 from pybricks.tools import multitask, run_task, wait
 
 from sciro.hubs import PeakHub
-from sciro.parameters import Button, Port
-from sciro.pump import FloorPro
+from sciro.parameters import Button, ExtPort, Port
+from sciro.pump import ColorSensor
 
 hub = PeakHub()
-floor_pro = FloorPro(Port.A)
-color = floor_pro.color_sensor(1)
-
-
-def rgb_to_hsv(r: float, g: float, b: float):
-    mx = max(r, g, b)
-    mn = min(r, g, b)
-    v = mx
-    if mx == 0:
-        s = 0.0
-    else:
-        s = (mx - mn) / mx
-    if mx == mn:
-        h = 0.0
-    else:
-        if mx == r:
-            h = (g - b) / (mx - mn)
-        elif mx == g:
-            h = 2.0 + (b - r) / (mx - mn)
-        else:
-            h = 4.0 + (r - g) / (mx - mn)
-        h = (h / 6.0) % 1.0
-    return h, s, v
+# The sensor is addressed by hub port and extension port; it does not matter
+# whether a FloorPro or another PUMP device carries the extension port.
+color: ColorSensor = ColorSensor(Port.A, ExtPort.EXT1)
 
 
 async def print_cs_data():
     while True:
         r, g, b, c, status = await color.read()
-        # Normalise by the clear channel so hue/saturation do not depend on
-        # the illumination level; value is the clear reading relative to full scale.
-        scale = c if c > 0 else 1
-        h, s, _ = rgb_to_hsv(r / scale, g / scale, b / scale)
-        v = c / 65535
-        print("RGBC: %5d %5d %5d %5d status=0x%02x | HSV: %.2f %.2f %.3f" % (r, g, b, c, status, h, s, v))
+        hsv = await color.hsv()
+        nearest = await color.color()
+        print("RGBC: %5d %5d %5d %5d status=0x%02x | h %3d s %3d v %3d | %s" % (r, g, b, c, status, hsv.h, hsv.s, hsv.v, nearest))
         await wait(250)
 
 
