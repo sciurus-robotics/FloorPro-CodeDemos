@@ -62,7 +62,7 @@ async def demo_line_sensors_analog():
     print("Method:      ir_raw.read()")
     print("Description: Raw reflectance (12-bit ADC) of each of the 15 IR line sensors, shown as a grayscale pattern.")
     # The raw stream is off by default: ask for it at 20 Hz while this demo runs.
-    await floor_pro.ir_raw.subscribe(PUMPDevice.PERIODIC, 2)
+    await floor_pro.ir_raw.subscribe(PUMPDevice.PERIODIC, 20)
     try:
         while True:
             await wait(10)
