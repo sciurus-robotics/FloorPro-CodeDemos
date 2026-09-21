@@ -26,6 +26,8 @@ understand `sciro.pump`, `sciro.hubs.PeakHub` and `Port.G`/`Port.H`.
   distance and surface, or for quality control with a standardized setup
 - `cs_demo.py` — Colour sensor on extension port 1: raw RGBC, HSV, LED control
 - `display_demo.py` — Just the display mirror, as a minimal program
+- `load_test.py` — Subscribe every stream at full rate and measure how the link
+  derates; results in [LOAD-TEST.md](LOAD-TEST.md)
 
 ## API in one look
 
