@@ -1,7 +1,7 @@
-# PUMP link load test
+# PUMP link load test — graceful derating
 
 What happens when a program subscribes to more than the sensor's link can carry.
-Measured with `load_test.py` on 2026-09-21: LP FloorPro (firmware of that date) on a
+Measured with `load_test.py` on 2026-09-21: FloorPro (firmware of that date) on a
 PeakHub port at 500 kbaud, colour sensor (TCS3400) on EXT1, IMU (BNO086) on EXT2.
 
 The test first measures every stream alone at "every sample" (its solo rate), then
