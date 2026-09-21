@@ -73,7 +73,9 @@ async def demo_line_sensors_analog():
                     brightness = values[index] * 100 // 4095 if index < 15 else 0
                     hub.display.pixel(row, col, brightness)
     finally:
-        await floor_pro.ir_raw.subscribe(PUMPDevice.OFF)
+        # Cancelled by the race: no await is possible here, but the request is
+        # sent right away and the hub keeps resending it until the sensor echoes.
+        floor_pro.ir_raw.subscribe(PUMPDevice.OFF)
 
 
 async def demo_display_mirror():
