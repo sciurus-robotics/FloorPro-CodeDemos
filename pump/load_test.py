@@ -35,7 +35,8 @@ for name, get in (("colour sensor on EXT1", lambda: floor_pro.color_sensor(1)), 
 
 
 def short_name(url: str, ext_port: int) -> str:
-    name = url.rstrip("/").split("/")[-2]
+    parts = url.rstrip("/").split("/")[:-1]  # drop the version
+    name = parts[-1] if parts[-1] != "calib" else "-".join(parts[-2:])
     return name if ext_port == 0 else "%s@%d" % (name, ext_port)
 
 
