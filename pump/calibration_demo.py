@@ -16,6 +16,7 @@ from sciro.pump import FloorPro
 
 hub = PeakHub()
 floor_pro = FloorPro(Port.A)
+hub.display.device(floor_pro)
 
 
 async def wait_for_right_button():
@@ -27,19 +28,21 @@ async def wait_for_right_button():
 
 async def calibration_demo():
     print("Starting calibration demo...")
-    print("Press RIGHT button to start calibration.")
-    await wait_for_right_button()
-    await floor_pro.line.calibrate(True)
-    print("Calibrating (line.read()[5] is", (await floor_pro.line.read())[5], ").")
-    print("Move the sensor over the bright and dark areas of interest. Press RIGHT button again when done.")
+    while True:
+        print("Press RIGHT button to start calibration.")
+        await wait_for_right_button()
+        await floor_pro.line.calibrate(True)
+        print("Calibrating (line.read()[5] is", (await floor_pro.line.read())[5], ").")
+        print("Move the sensor over the bright and dark areas of interest. Press RIGHT button again when done.")
 
-    await wait_for_right_button()
-    await floor_pro.line.calibrate(False)
-    print("Calibration complete. Sensor data will now reflect the new calibration.")
+        await wait_for_right_button()
+        await floor_pro.line.calibrate(False)
+        print("Calibration complete. Sensor data will now reflect the new calibration.")
 
-    mins, maxs, _, _ = await floor_pro.ir_calib.oneshot()
-    print("min:", mins)
-    print("max:", maxs)
+        mins, maxs, _, _ = await floor_pro.ir_calib.oneshot()
+        print("min:", mins)
+        print("max:", maxs)
+        print("range:", [maxs[i] - mins[i] for i in range(len(mins))])
 
 
 run_task(calibration_demo())
