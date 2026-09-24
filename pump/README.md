@@ -39,6 +39,9 @@ hub = PeakHub()
 fp = FloorPro(Port.A)
 
 cog_dark, cog_bright, brightness, darkness, mask, calibrating = fp.line.read()
+fp.dark_centroid()                        # single values: also bright_centroid(),
+fp.line_sensors_binary()                  # brightness(), darkness(); 15 bools (True = bright)
+fp.line_sensors_analog()                  # 15 raw ADC counts on demand
 raw = fp.ir_raw.oneshot()                 # 15 x 12-bit ADC counts
 mins, maxs, _, _ = fp.ir_calib.oneshot()  # the stored calibration table
 r, g, b, c, status = fp.color_sensor(1).read()
