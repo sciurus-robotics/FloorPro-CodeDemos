@@ -2,7 +2,7 @@
 
 What happens when a program subscribes to more than the sensor's link can carry.
 Measured with `load_test.py` on 2026-09-21: FloorPro (firmware of that date) on a
-PeakHub port at 500 kbaud, colour sensor (TCS3400) on EXT1, IMU (BNO086) on EXT2.
+PeakHub port at 500 kbaud, color sensor (TCS3400) on EXT1, IMU (BNO086) on EXT2.
 
 The test first measures every stream alone at "every sample" (its solo rate), then
 switches all six streams on at once for ten seconds and reads the hub's link
@@ -34,7 +34,7 @@ at about 256 passes per second here. Streams sampling slower than that are
 untouched; only the 400 Hz IR streams skip samples, evenly among themselves.
 Nothing queues up, no stream starves, and no frame is lost on the wire.
 
-In practice this is the right default: the slow channels (colour, IMU, the
+In practice this is the right default: the slow channels (color, IMU, the
 display picture) are the ones where every sample carries information, while a
 line sensor array read at 256 Hz instead of 400 Hz still tracks a line. If you
 need a stream at its full rate under load, switch the others to a lower rate,

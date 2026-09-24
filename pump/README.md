@@ -52,7 +52,7 @@ roll, pitch, yaw, status = fp.gyro(2).read()
 from sciro.parameters import ExtPort
 from sciro.pump import ColorSensor, Gyro
 color_sensor = ColorSensor(Port.A, ExtPort.EXT1)
-print(color_sensor.hsv().h, color_sensor.color())  # hue 0..359 / nearest detectable colour
+print(color_sensor.hsv().h, color_sensor.color())  # hue 0..359 / nearest detectable color
 gyro = Gyro(Port.A, ExtPort.EXT2)        # demos for the gyro: see Gyro-CodeDemos
 hub.display.device(fp, brightness=300)    # mirror the sensor's LED strip
 ```
