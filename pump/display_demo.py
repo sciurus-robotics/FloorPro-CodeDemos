@@ -2,8 +2,8 @@
 
 Run: scirodev run ble display_demo.py   (sensor on Port.A)
 
-Rows 0-2 show the 15 IR sensors (green bar = bright, red dot = dark centre of
-gravity, blue dot = bright centre of gravity; a rainbow while calibrating).
+Rows 0-2 show the 15 IR sensors (green bar = bright, red dot = dark center of
+gravity, blue dot = bright center of gravity; a rainbow while calibrating).
 Bottom-left is extension port 2, bottom-right extension port 1, as on the sensor.
 The matrix is much dimmer than the strip, so brightness above 100 amplifies.
 """

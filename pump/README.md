@@ -17,7 +17,7 @@ understand `sciro.pump`, `sciro.hubs.PeakHub` and `Port.G`/`Port.H`.
 ## Files
 
 - `demo.py` — Interactive demos, cycle with the LEFT/RIGHT hub buttons: dark and
-  bright centre of gravity, brightness, the 15 sensors as binary and raw
+  bright center of gravity, brightness, the 15 sensors as binary and raw
   grayscale patterns on the 5x5 display, and the sensor's own LED picture
   mirrored on the display
 - `calibration_demo.py` — Calibrate the IR array via software control (the

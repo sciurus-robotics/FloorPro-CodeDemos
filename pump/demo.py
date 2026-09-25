@@ -14,13 +14,13 @@ floor_pro = FloorPro(Port.A)
 
 
 def tenths(pitches: float) -> int:
-    """A centre of gravity in sensor pitches (-7 .. +7) as tenths, for the display."""
+    """A center of gravity in sensor pitches (-7 .. +7) as tenths, for the display."""
     return int(round(pitches * 10))
 
 
 async def demo_dark_centroid():
     print("Method:      line.read()[0]")
-    print("Description: Centre of gravity of the dark regions, in tenths of a sensor pitch (-70 .. 70).")
+    print("Description: Center of gravity of the dark regions, in tenths of a sensor pitch (-70 .. 70).")
     while True:
         cog_dark, _, _, _, _, _ = await floor_pro.line.read()
         hub.display.number(tenths(cog_dark))
@@ -29,7 +29,7 @@ async def demo_dark_centroid():
 
 async def demo_bright_centroid():
     print("Method:      line.read()[1]")
-    print("Description: Centre of gravity of the bright regions, in tenths of a sensor pitch (-70 .. 70).")
+    print("Description: Center of gravity of the bright regions, in tenths of a sensor pitch (-70 .. 70).")
     while True:
         _, cog_bright, _, _, _, _ = await floor_pro.line.read()
         hub.display.number(tenths(cog_bright))

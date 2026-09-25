@@ -1,7 +1,7 @@
 # FloorPro — Code Demos
 
 Driver code and demo programs for the **FloorPro** line sensor by Sciurus
-Robotics: 15 IR reflectance elements reporting the centre of gravity of dark and
+Robotics: 15 IR reflectance elements reporting the center of gravity of dark and
 bright regions, overall brightness, per-sensor readings, plus two extension ports
 for a color sensor or the gyro.
 
