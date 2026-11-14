@@ -1,99 +1,104 @@
-from pybricks.tools import wait, run_task, multitask
-from pybricks.hubs import PrimeHub, InventorHub
-from pybricks.parameters import Port, Button
-from floor_pro_v3 import FloorProV3
+"""FloorPro on a LEGO hub: interactive demos, cycle with the LEFT/RIGHT buttons.
+
+Run: pybricksdev run ble demo.py   (FloorPro on Port.A)
+
+Modes are explicit: each demo selects the LUMP mode it needs once, then reads
+in a loop. Reading a value of another mode without select() raises ModeError.
+"""
+from pybricks.hubs import InventorHub
+from pybricks.parameters import Button, Port
+from pybricks.tools import multitask, run_task, wait
+
+from floor_pro import FloorPro, ModeError
 
 hub = InventorHub()
+floor_pro = FloorPro(Port.A)
 
-floor_pro = FloorProV3(Port.A)
+
+def show_15(values_0_100):
+    for row in range(5):
+        for col in range(5):
+            i = row * 5 + col
+            hub.display.pixel(row, col, values_0_100[i] if i < 15 else 0)
+
 
 async def demo_dark_centroid():
-    print("Method:      dark_centroid()")
-    print("Description: Centroid position of dark regions (-127 to 127), displayed as a number.")
+    print("dark_centroid(): centroid of dark pixels (-127..127), shown as a number")
+    await floor_pro.select(FloorPro.DFLT)
     while True:
-        value = await floor_pro.dark_centroid()
-        hub.display.number(value)
+        hub.display.number(await floor_pro.dark_centroid())
         await wait(10)
 
 
 async def demo_bright_centroid():
-    print("Method:      bright_centroid()")
-    print("Description: Centroid position of bright regions (-127 to 127), displayed as a number.")
+    print("bright_centroid(): centroid of bright pixels (-127..127)")
+    await floor_pro.select(FloorPro.DFLT)
     while True:
-        value = await floor_pro.bright_centroid()
-        hub.display.number(value)
+        hub.display.number(await floor_pro.bright_centroid())
         await wait(10)
 
 
 async def demo_brightness():
-    print("Method:      brightness()")
-    print("Description: Overall brightness of the sensor (-127 to 127), displayed as a number.")
+    print("brightness(): overall brightness (-127..127)")
+    await floor_pro.select(FloorPro.DFLT)
     while True:
-        value = await floor_pro.brightness()
-        hub.display.number(value)
+        hub.display.number(await floor_pro.brightness())
+        await wait(10)
+
+
+async def demo_line_sensors_binary():
+    print("line_sensors_binary(): on/off per IR element on the 5x5 display")
+    await floor_pro.select(FloorPro.DFLT)
+    while True:
+        show_15([100 if b else 0 for b in await floor_pro.line_sensors_binary()])
         await wait(10)
 
 
 async def demo_line_sensors_analog():
-    print("Method:      line_sensors_analog()")
-    print("Description: Analog reflectance of each of the 15 IR line sensors, shown as a grayscale pattern on the 5x5 display.")
+    print("line_sensors_analog(): reflectance per IR element as grayscale (mode SCLD)")
+    await floor_pro.select(FloorPro.SCLD)
     while True:
+        show_15([(v + 127) * 100 // 254 for v in await floor_pro.line_sensors_analog()])
         await wait(10)
-        signed_values = await floor_pro.line_sensors_analog()
-        unsigned_values = tuple(b + 127 for b in signed_values)
-
-        # Display on 5x5 grid
-        for row in range(5):
-            for col in range(5):
-                index = row * 5 + col
-                if index < 15:
-                    # Convert [0, 255] to [0, 100]
-                    brightness = unsigned_values[index] * 100 // 255
-                    hub.display.pixel(row, col, brightness)
-                else:
-                    # Turn off remaining LEDs
-                    hub.display.pixel(row, col, 0)
 
 
-async def demo_line_sensors_binary():
-    print("Method:      line_sensors_binary()")
-    print("Description: On/off state of each of the 15 IR line sensors, shown as a binary pattern on the 5x5 display.")
+async def demo_pd():
+    print("pd(): on-device PD controller output u (mode PD), shown as a number")
+    if not floor_pro.has_pd():
+        print("  this firmware has no PD modes (needs >= 0x3000000A)")
+        await wait(1000)
+        return
+    await floor_pro.select(FloorPro.PD)
     while True:
+        u, e, de, valid = await floor_pro.pd()
+        hub.display.number(int(u) if valid else 0)
         await wait(10)
-        data = await floor_pro.line_sensors_binary()
-
-        # Display on 5x5 grid
-        for row in range(5):
-            for col in range(5):
-                index = row * 5 + col
-                brightness = 100 if index < 15 and data[index] else 0
-                hub.display.pixel(row, col, brightness)
 
 
 async def demo():
     print("Device info:", floor_pro.info())
-    print("Device ID:", (await floor_pro.device_id()))
-
-    print("Dark centroid:", await floor_pro.dark_centroid())
-    print("Bright centroid:", await floor_pro.bright_centroid())
-    print("Brightness:", await floor_pro.brightness())
-    print("Raw sensor byte:", await floor_pro.line_sensors_analog())
+    await floor_pro.select(FloorPro.DEVID)
+    print("Device ID:", await floor_pro.device_id())
+    await floor_pro.select(FloorPro.DFLT)
+    print("Dark centroid:", await floor_pro.dark_centroid(), "bright:", await floor_pro.bright_centroid(),
+          "brightness:", await floor_pro.brightness())
+    try:
+        await floor_pro.line_sensors_analog()  # needs SCLD: raises at once, nothing is sent
+    except ModeError as e:
+        print("Expected ModeError:", e)
+    if floor_pro.has_pd():
+        await floor_pro.set_gains(40.0, 0.0)   # switches to PDSET, confirms, switches back to DFLT
+        await floor_pro.select(FloorPro.PDSET)
+        print("PD gains (kp, kd, tf_ms, src):", await floor_pro.gains())
+        await floor_pro.select(FloorPro.DFLT)
 
     await wait(1000)
-
-    demos = [
-        demo_dark_centroid,
-        demo_bright_centroid,
-        demo_brightness,
-        demo_line_sensors_binary,
-        demo_line_sensors_analog,
-    ]
-
+    demos = [demo_dark_centroid, demo_bright_centroid, demo_brightness,
+             demo_line_sensors_binary, demo_line_sensors_analog, demo_pd]
     index = 0
-    direction = [1]  # +1 = right/next, -1 = left/previous
+    direction = [1]
 
     async def wait_for_button():
-        # Wait for button release first to avoid immediately re-triggering
         while hub.buttons.pressed():
             await wait(50)
         while True:
@@ -107,7 +112,7 @@ async def demo():
             await wait(50)
 
     while True:
-        print(f"\n--- Demo {index + 1}/{len(demos)} ---")
+        print("\n--- Demo %d/%d ---" % (index + 1, len(demos)))
         hub.display.number(index + 1)
         await wait(500)
         await multitask(demos[index](), wait_for_button(), race=True)
