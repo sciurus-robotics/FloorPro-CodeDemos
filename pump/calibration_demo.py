@@ -11,11 +11,13 @@ own BOOT button toggles calibration too.)
 from pybricks.tools import run_task, wait
 
 from sciro.hubs import PeakHub
-from sciro.parameters import Button, Port
+from sciro.parameters import Button, Port, Side
 from sciro.pump import FloorPro
 
 hub = PeakHub()
-floor_pro = FloorPro(Port.A)
+floor_pro = FloorPro(Port.B)
+
+hub.display.orientation(Side.RIGHT)
 hub.display.device(floor_pro)
 
 

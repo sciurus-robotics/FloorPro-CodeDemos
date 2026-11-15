@@ -59,6 +59,8 @@ class FloorPro(PUPDevice):
     def __init__(self, port, mode=DFLT):
         """FloorPro(port, mode=FloorPro.DFLT)
 
+        Create the object at module level, before ``run_task()``: Pybricks
+        allows ``PUPDevice.info()`` only before multitasking starts.
         Opens the FloorPro on ``port``. ``mode`` is the mode the device is
         assumed to be in (a hub leaves a freshly connected device in mode 0);
         ``await fp.select(mode)`` once at program start makes it certain.
