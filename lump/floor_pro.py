@@ -62,21 +62,18 @@ class FloorPro(PUPDevice):
         Opens the FloorPro on ``port``. ``mode`` is the mode the device is
         assumed to be in (a hub leaves a freshly connected device in mode 0);
         ``await fp.select(mode)`` once at program start makes it certain.
-        All data methods are awaitable (use ``await`` inside ``run_task``)."""
+        All data methods are awaitable (use ``await`` inside ``run_task``).
+        ``fp.mode`` is the selected mode (read-only by convention; Pybricks'
+        MicroPython has no ``property``)."""
         super().__init__(port)
         self.dev_info = self.info()
         self.num_modes = len(self.dev_info["modes"])
-        self._mode = mode
+        self.mode = mode
 
     # --- mode handling ---------------------------------------------------------
 
-    @property
-    def mode(self):
-        """The selected LUMP mode (an int, compare with the class constants)."""
-        return self._mode
-
     def mode_name(self, mode=None):
-        m = self._mode if mode is None else mode
+        m = self.mode if mode is None else mode
         return self.MODE_NAMES[m] if 0 <= m < len(self.MODE_NAMES) else str(m)
 
     def has_pd(self):
@@ -90,11 +87,11 @@ class FloorPro(PUPDevice):
         if not 0 <= mode < self.num_modes:
             raise ValueError("mode %d not announced by this firmware (%d modes)" % (mode, self.num_modes))
         data = await self._read_retry(mode)
-        self._mode = mode
+        self.mode = mode
         return data
 
     def _require(self, mode):
-        if self._mode != mode:
+        if self.mode != mode:
             raise ModeError("device is in %s, select(FloorPro.%s) first"
                             % (self.mode_name(), self.mode_name(mode)))
 
@@ -117,15 +114,15 @@ class FloorPro(PUPDevice):
 
     async def send_cmd(self, msg):
         data = [ord(c) for c in msg]
-        n = self.dev_info["modes"][self._mode][1]
-        if self._mode == self.PDSET:
+        n = self.dev_info["modes"][self.mode][1]
+        if self.mode == self.PDSET:
             raise ModeError("commands cannot be sent while PDSET is selected (it takes binary settings)")
         if len(data) > n:
             raise ValueError("command too long for mode %s (max %d)" % (self.mode_name(), n))
         data += [0] * (n - len(data))
         for attempt in range(self._RETRIES):
             try:
-                await self.write(self._mode, data)
+                await self.write(self.mode, data)
                 return
             except OSError:
                 if attempt == self._RETRIES - 1:
@@ -228,7 +225,7 @@ class FloorPro(PUPDevice):
             raise ValueError("src must be 0 (dark) or 1 (bright)")
         if not self.has_pd():
             raise OSError("this FloorPro firmware has no PD modes (needs >= 0x3000000A)")
-        previous = self._mode
+        previous = self.mode
         await self.select(self.PDSET)
         try:
             for attempt in range(2):
