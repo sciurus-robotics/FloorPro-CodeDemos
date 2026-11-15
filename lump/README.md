@@ -53,7 +53,9 @@ settings into the `PDSET` mode and waits until the sensor reflects them (LUMP
 has no reply channel, so this read-back is the acknowledgement), then returns to
 the previously selected mode. Reading `pd()` requires `select(FloorPro.PD)`. Units
 of `u` are "Kp per pitch": for a robot that drives `drive(speed, u)` Kp is
-deg/s per pitch. `pd_demo.py` shows the loop. Extension-sensor packs are only
+deg/s per pitch. `valid` only says the dark centroid has some mass (one dark
+channel is enough); it is not a line detector, so combine it with the
+brightness value and a threshold tuned on your track to decide "line lost". `pd_demo.py` shows the loop. Extension-sensor packs are only
 in `DFLT`, so a program cannot read a color sensor and the PD output in one loop
 without switching each time; pick one or accept the two switches.
 

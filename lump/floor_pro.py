@@ -189,12 +189,16 @@ class FloorPro(PUPDevice):
 
     async def pd(self):
         """(u, e, de, valid): controller output in output units (e.g. deg/s of
-        turn rate), error in pitches, filtered error rate in pitches/s, line seen."""
+        turn rate), error in pitches, filtered error rate in pitches/s, and
+        valid = the selected centroid has any mass (at least one channel reads
+        dark). valid is NOT a line detector: a single dark fleck counts. Decide
+        "line lost" from valid together with brightness (pd_line()[2]) and a
+        threshold tuned on your track."""
         d = await self.read_frame(self.PD)
         return (_i16(d[6], d[7]) / 100, _i16(d[8], d[9]) / 1000, _i16(d[10], d[11]) / 1000, bool(d[12]))
 
     async def pd_output(self):
-        """u, or 0.0 while no line is seen."""
+        """u, or 0.0 while the selected centroid has no mass (valid == 0)."""
         d = await self.read_frame(self.PD)
         return _i16(d[6], d[7]) / 100 if d[12] else 0.0
 
